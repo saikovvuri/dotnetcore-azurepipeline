@@ -7,11 +7,11 @@ trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-latest'
-  rid: 'linux-x64'
+  vmImage: 'ubuntu-latest'  
 
 variables:
   buildConfiguration: 'Release'
+  rid: 'linux-x64'
 
 steps:
 - task: UseDotNet@2
