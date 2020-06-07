@@ -66,8 +66,14 @@ stages:
     - task: DownloadPipelineArtifact@2
       inputs:
        artifactName: 'webapp'
-       targetPath: 'pipeline'
        itemPattern: '**/*.zip'
+
+    - task: AzureWebApp@1
+      inputs:
+        azureSubscription: $(azureserviceconnection)
+        appType: 'webAppLinux'
+        appName: $(webappname)
+        package: '$(Pipeline.Workspace)/**/*.zip'
        
       
       
