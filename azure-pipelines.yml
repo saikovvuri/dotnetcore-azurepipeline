@@ -57,4 +57,17 @@ stages:
 - stage: Deploy to Azure Dev
   jobs:
   - job: Deploy
-    
+    displayName: 'Deploy to Dev'
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+
+    - task: DownloadPipelineArtifact@2
+      inputs:
+       artifactName: 'webapp'
+       targetPath: 'pipeline'
+       itemPattern: '**/*.zip'
+       
+      
+      
