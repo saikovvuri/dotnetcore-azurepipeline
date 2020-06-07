@@ -6,42 +6,60 @@
 trigger:
 - master
 
-pool:
-  vmImage: 'ubuntu-latest'  
-
 variables:
   buildConfiguration: 'Release'
   rid: 'linux-x64'
 
-steps:
-- task: UseDotNet@2
-  inputs:
-    version: '2.2.x'
-    packageType: sdk
+stages:
+- stage: build
+  displayName: 'Build and Test Stage'
 
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet build $(buildConfiguration)'
-  inputs:
-    command: build
-    arguments: '-r $(rid) --configuration $(buildConfiguration) /p:SourceRevisionId=$(Build.SourceVersion)'
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: 'ubuntu-latest'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Test'
-  inputs:
-    command: 'test'
-    projects: '**/*tests/*.csproj'
-    arguments: '--runtime $(rid) --configuration $(buildConfiguration)'
+    steps:
+    - task: UseDotNet@2
+      inputs:
+        version: '2.2.x'
+        packageType: sdk
 
-- task: DotNetCoreCLI@2
-  displayName: 'Publish'
-  inputs:
-    command: 'publish'
-    publishWebProjects: true
-    arguments: '-r $(rid) --no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: true
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build $(buildConfiguration)'
+      inputs:
+        command: build
+        arguments: '-r $(rid) --configuration $(buildConfiguration) /p:SourceRevisionId=$(Build.SourceVersion)'
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Upload Artifacts'
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: 'dotnetcore-cicd'
+    - task: DotNetCoreCLI@2
+      displayName: 'Test'
+      inputs:
+        command: 'test'
+        projects: '**/*tests/*.csproj'
+        arguments: '--runtime $(rid) --configuration $(buildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish'
+      inputs:
+        command: 'publish'
+        publishWebProjects: true
+        arguments: '-r $(rid) --no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+        zipAfterPublish: true
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Upload Artifacts'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: 'dotnetcore-cicd'
+
+    - task: PowerShell@2
+      displayName: 'Debug system variables'
+      inputs:
+        targetType: inline
+        script: |
+          Write-Host "$(Build.ArtifactStagingDirectory)"
+          Write-Host "$(System.DefaultWorkingDirectory)"
+          Write-Host "$(System.ArtifactsDirectory)"
+          Write-Host "$(Pipeline.Workspace)"
+          Write-Host "$(System.ArtifactsDirectory)"
