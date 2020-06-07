@@ -54,7 +54,7 @@ stages:
         artifactName: 'webapp'
         publishLocation: 'pipeline'
 
-- stage: Deploy to Azure Dev
+- stage: Deploy
   jobs:
   - job: Deploy
     displayName: 'Deploy to Dev'
