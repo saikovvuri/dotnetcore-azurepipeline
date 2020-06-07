@@ -47,19 +47,14 @@ stages:
         arguments: '-r $(rid) --no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
         zipAfterPublish: true
 
-    - task: PublishBuildArtifacts@1
-      displayName: 'Upload Artifacts'
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Artifacts'
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        artifactName: 'dotnetcore-cicd'
+        targetPath: '$(Build.ArtifactStagingDirectory)'
+        artifactName: 'webapp'
+        publishLocation: 'pipeline'
 
-    - task: PowerShell@2
-      displayName: 'Debug system variables'
-      inputs:
-        targetType: inline
-        script: |
-          Write-Host "$(Build.ArtifactStagingDirectory)"
-          Write-Host "$(System.DefaultWorkingDirectory)"
-          Write-Host "$(System.ArtifactsDirectory)"
-          Write-Host "$(Pipeline.Workspace)"
-          Write-Host "$(System.ArtifactsDirectory)"
+- stage: Deploy to Azure Dev
+  jobs:
+  - job: Deploy
+    
