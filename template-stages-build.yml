@@ -1,7 +1,7 @@
 parameters:
   vmImage: 'ubuntu-latest' # default value
   buildConfiguration: ''
-  rid: 'linux-x64'
+  rid: ''
 
 stages:
 - stage: DotnetBuildStageTemplate
