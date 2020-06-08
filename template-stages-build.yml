@@ -19,24 +19,24 @@ stages:
         packageType: sdk
 
     - task: DotNetCoreCLI@2
-      displayName: 'dotnet build $(buildConfiguration)'
+      displayName: 'dotnet build ${{ buildConfiguration }}'
       inputs:
         command: build
-        arguments: '--configuration $(buildConfiguration) /p:SourceRevisionId=$(Build.SourceVersion)'
+        arguments: '--configuration ${{ buildConfiguration }} /p:SourceRevisionId=$(Build.SourceVersion)'
 
     - task: DotNetCoreCLI@2
       displayName: 'Test'
       inputs:
         command: 'test'
         projects: '**/*tests/*.csproj'
-        arguments: '--configuration $(buildConfiguration)'
+        arguments: '--configuration ${{ buildConfiguration }}'
 
     - task: DotNetCoreCLI@2
       displayName: 'Publish'
       inputs:
         command: 'publish'
         publishWebProjects: true
-        arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+        arguments: '--no-build --configuration ${{ buildConfiguration }} --output $(Build.ArtifactStagingDirectory)'
         zipAfterPublish: true
 
     - task: PublishPipelineArtifact@1
