@@ -1,0 +1,47 @@
+parameters:
+  vmImage: 'ubuntu-latest' # default value
+  buildConfiguration: ''  
+
+stages:
+- stage: DotnetBuildStageTemplate
+  displayName: 'Dotnet build with stages template'
+
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: ${{ parameters.vmImage }}
+
+    steps:
+    - task: UseDotNet@2
+      inputs:
+        version: '2.2.x'
+        packageType: sdk
+
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build $(buildConfiguration)'
+      inputs:
+        command: build
+        arguments: '--configuration $(buildConfiguration) /p:SourceRevisionId=$(Build.SourceVersion)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Test'
+      inputs:
+        command: 'test'
+        projects: '**/*tests/*.csproj'
+        arguments: '--configuration $(buildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish'
+      inputs:
+        command: 'publish'
+        publishWebProjects: true
+        arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+        zipAfterPublish: true
+
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Artifacts'
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)'
+        artifactName: 'webapp'
+        publishLocation: 'pipeline'

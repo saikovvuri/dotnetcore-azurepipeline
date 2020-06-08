@@ -1,0 +1,37 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- master
+
+stages:
+- template: template-stages-build.yml
+  parameters: 
+    vmImage: 'ubuntu-latest'
+    buildConfiguration: 'release'
+
+- stage: Deploy
+  jobs:
+  - job: Deploy
+    displayName: 'Deploy to Dev'
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+
+    - task: DownloadPipelineArtifact@2
+      inputs:
+       artifactName: 'webapp'
+       itemPattern: '**/*.zip'
+
+    - task: AzureWebApp@1
+      inputs:
+        azureSubscription: $(azureserviceconnection)
+        appType: 'webAppLinux'
+        appName: $(webappname)
+        package: '$(Pipeline.Workspace)/**/*.zip'
+       
+      
+      
