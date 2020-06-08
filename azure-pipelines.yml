@@ -23,7 +23,7 @@ stages:
     steps:
     - task: UseDotNet@2
       inputs:
-        version: '3.1.x'
+        version: '2.2.x'
         packageType: sdk
 
     - task: DotNetCoreCLI@2
