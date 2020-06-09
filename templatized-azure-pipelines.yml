@@ -13,26 +13,13 @@ stages:
     buildConfiguration: 'release'
     rid: 'linux-x64'
 
-- stage: Deploy
-  jobs:
-  - job: Deploy
-    displayName: 'Deploy to Dev'
-    pool:
-      vmImage: 'ubuntu-latest'
-
-    steps:
-
-    - task: DownloadPipelineArtifact@2
-      inputs:
-       artifactName: 'webapp'
-       itemPattern: '**/*.zip'
-
-    - task: AzureWebApp@1
-      inputs:
-        azureSubscription: $(azureserviceconnection)
-        appType: 'webAppLinux'
-        appName: $(webappname)
-        package: '$(Pipeline.Workspace)/**/*.zip'
+- template: template-appsvc-zipdeploy.yml
+  parameters:
+    vmImage: 'ubuntu-latest'
+    webappName: $(webappname)
+    azureserviceConnection: $(azureserviceconnection)
+    stageDisplayName: 'Deploy to dev'
+    pipelineArtifactName: 'webapp'
        
       
       

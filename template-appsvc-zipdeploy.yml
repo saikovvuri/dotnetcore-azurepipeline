@@ -1,0 +1,29 @@
+parameters:
+  stageDisplayName: ''
+  azureserviceConnection: ''
+  pipelineArtifactName: ''
+  webappName: ''
+  vmImage: ''
+
+stages:
+
+- stage: Deploy
+  jobs:
+  - job: Deploy
+    displayName: {{ parameters.stageDisplayName }}
+    pool:
+      vmImage: {{ parameters.vmImage }}
+
+    steps:
+
+    - task: DownloadPipelineArtifact@2
+      inputs:
+       artifactName: {{ parameters.pipelineArtifactName }}
+       itemPattern: '**/*.zip'
+
+    - task: AzureWebApp@1
+      inputs:
+        azureSubscription: {{ parameters.azureserviceConnection }}
+        appType: 'webAppLinux'
+        appName: {{ parameters.webappName }}
+        package: '$(Pipeline.Workspace)/**/*.zip'
