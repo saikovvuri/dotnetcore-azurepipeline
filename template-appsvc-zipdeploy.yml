@@ -10,20 +10,20 @@ stages:
 - stage: Deploy
   jobs:
   - job: Deploy
-    displayName: 'Deploy'
+    displayName: ${{ parameters.stageDisplayName }}
     pool:
-      vmImage: {{ parameters.vmImage }}
+      vmImage: ${{ parameters.vmImage }}
 
     steps:
 
     - task: DownloadPipelineArtifact@2
       inputs:
-       artifactName: {{ parameters.pipelineArtifactName }}
+       artifactName: ${{ parameters.pipelineArtifactName }}
        itemPattern: '**/*.zip'
 
     - task: AzureWebApp@1
       inputs:
-        azureSubscription: {{ parameters.azureserviceConnection }}
+        azureSubscription: ${{ parameters.azureserviceConnection }}
         appType: 'webAppLinux'
-        appName: {{ parameters.webappName }}
+        appName: ${{ parameters.webappName }}
         package: '$(Pipeline.Workspace)/**/*.zip'
