@@ -10,7 +10,7 @@ stages:
 - stage: Deploy
   jobs:
   - job: Deploy
-    displayName: {{ parameters.stageDisplayName }}
+    displayName: 'Deploy'
     pool:
       vmImage: {{ parameters.vmImage }}
 
