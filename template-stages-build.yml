@@ -1,7 +1,6 @@
 parameters:
   vmImage: 'ubuntu-latest' # default value
-  buildConfiguration: ''
-  rid: ''
+  buildConfiguration: ''  
 
 stages:
 - stage: DotnetBuildStageTemplate
@@ -23,21 +22,21 @@ stages:
       displayName: 'dotnet build ${{ parameters.buildConfiguration }}'
       inputs:
         command: build
-        arguments: '-r ${{ parameters.rid }} --configuration ${{ parameters.buildConfiguration }} /p:SourceRevisionId=$(Build.SourceVersion)'
+        arguments: '--configuration ${{ parameters.buildConfiguration }} /p:SourceRevisionId=$(Build.SourceVersion)'
 
     - task: DotNetCoreCLI@2
       displayName: 'Test'
       inputs:
         command: 'test'
         projects: '**/*tests/*.csproj'
-        arguments: '--runtime ${{ parameters.rid }} --configuration ${{ parameters.buildConfiguration }}'
+        arguments: '--configuration ${{ parameters.buildConfiguration }}'
 
     - task: DotNetCoreCLI@2
       displayName: 'Publish'
       inputs:
         command: 'publish'
         publishWebProjects: true
-        arguments: '--runtime ${{ parameters.rid }} --no-build --configuration ${{ parameters.buildConfiguration }} --output $(Build.ArtifactStagingDirectory)'
+        arguments: '--no-build --configuration ${{ parameters.buildConfiguration }} --output $(Build.ArtifactStagingDirectory)'
         zipAfterPublish: true
 
     - task: PublishPipelineArtifact@1

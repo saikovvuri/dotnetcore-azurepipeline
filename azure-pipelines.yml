@@ -7,8 +7,7 @@ trigger:
 - master
 
 variables:
-  buildConfiguration: 'Release'
-  rid: 'linux-x64'
+  buildConfiguration: 'Release'  
 
 stages:
 - stage: build
@@ -30,21 +29,21 @@ stages:
       displayName: 'dotnet build $(buildConfiguration)'
       inputs:
         command: build
-        arguments: '-r $(rid) --configuration $(buildConfiguration) /p:SourceRevisionId=$(Build.SourceVersion)'
+        arguments: '--configuration $(buildConfiguration) /p:SourceRevisionId=$(Build.SourceVersion)'
 
     - task: DotNetCoreCLI@2
       displayName: 'Test'
       inputs:
         command: 'test'
         projects: '**/*tests/*.csproj'
-        arguments: '--runtime $(rid) --configuration $(buildConfiguration)'
+        arguments: --configuration $(buildConfiguration)'
 
     - task: DotNetCoreCLI@2
       displayName: 'Publish'
       inputs:
         command: 'publish'
         publishWebProjects: true
-        arguments: '-r $(rid) --no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+        arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
         zipAfterPublish: true
 
     - task: PublishPipelineArtifact@1
@@ -70,8 +69,7 @@ stages:
 
     - task: AzureWebApp@1
       inputs:
-        azureSubscription: $(azureserviceconnection)
-        appType: 'webAppLinux'
+        azureSubscription: $(azureserviceconnection)        
         appName: $(webappname)
         package: '$(Pipeline.Workspace)/**/*.zip'
        
