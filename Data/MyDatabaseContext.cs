@@ -11,7 +11,7 @@ namespace DotNetCoreSqlDb.Models
         public MyDatabaseContext (DbContextOptions<MyDatabaseContext> options)
             : base(options)
         {
-            var conn = (Microsoft.Data.SqlClient.SqlConnection)Database.GetDbConnection();
+            var conn = (Microsoft.Data.SqlClient.SqlConnection)Database.GetDbConnection();        
             conn.AccessToken = (new Microsoft.Azure.Services.AppAuthentication.AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
         }
 
