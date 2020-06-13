@@ -23,6 +23,7 @@ stages:
 
     - task: AzureWebApp@1
       inputs:
-        azureSubscription: ${{ parameters.azureserviceConnection }}        
+        azureSubscription: ${{ parameters.azureserviceConnection }}
+        appType: 'webAppLinux'        
         appName: ${{ parameters.webappName }}
         package: '$(Pipeline.Workspace)/**/*.zip'

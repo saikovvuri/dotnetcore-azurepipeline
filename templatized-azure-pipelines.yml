@@ -10,7 +10,8 @@ stages:
 - template: template-stages-build.yml
   parameters: 
     vmImage: 'ubuntu-latest'
-    buildConfiguration: 'release'    
+    buildConfiguration: 'release'
+    rid: 'linux-x64'    
 
 - template: template-appsvc-zipdeploy.yml
   parameters:
