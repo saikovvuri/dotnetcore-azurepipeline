@@ -33,7 +33,10 @@ namespace DotNetCoreSqlDb
             else 
             {
                 services.AddDbContext<MyDatabaseContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("MyDbConnection")));
+                {
+                    options.UseSqlServer(Configuration.GetConnectionString("MyDbConnection"));
+                    options.UseAzureAccessToken();
+                });
             }
         }
 
