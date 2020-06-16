@@ -28,7 +28,7 @@ namespace DotNetCoreSqlDb
             if(Environment.IsDevelopment())
             {
                 services.AddDbContext<MyDatabaseContext>(options =>
-                    options.UseSqlite(Configuration.GetConnectionString("MyDbConnection")));
+                    options.UseSqlServer(Configuration.GetConnectionString("MyDbConnection")));
             }
             else 
             {
