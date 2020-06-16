@@ -28,13 +28,13 @@ namespace DotNetCoreSqlDb
             if(Environment.IsDevelopment())
             {
                 services.AddDbContext<MyDatabaseContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("MyDbConnection")));
+                    options.UseSqlite(Configuration.GetConnectionString("MyDbConnection")));
             }
             else 
             {
                 services.AddDbContext<MyDatabaseContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("MyDbConnection")));
-            }
+            }            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,9 +46,10 @@ namespace DotNetCoreSqlDb
             }
             else
             {
-                app.UseExceptionHandler("/Error");
+                app.UseDeveloperExceptionPage();
+                //app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                //app.UseHsts();
             }
 
             app.UseHttpsRedirection();
@@ -62,6 +63,21 @@ namespace DotNetCoreSqlDb
             {
                 endpoints.MapRazorPages();
             });
+
+            UpdateDatabase(app);
+        }
+
+        private static void UpdateDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<MyDatabaseContext>())
+                {
+                    context.Database.Migrate();
+                }
+            }
         }
     }
 }
