@@ -22,11 +22,9 @@ namespace DotNetCoreSqlDb.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT");
+                    b.Property<DateTime>("CreatedDate");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("TEXT");
+                    b.Property<string>("Description");
 
                     b.HasKey("ID");
 

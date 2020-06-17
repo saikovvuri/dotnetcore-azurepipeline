@@ -12,7 +12,6 @@ namespace DotNetCoreSqlDb.Models
         public string Description { get; set; }
 
         [Display(Name = "Created Date")]
-        [DataType(DataType.Date)]        
         public DateTime CreatedDate { get; set; }
     }
 }
